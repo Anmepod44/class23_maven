@@ -1,0 +1,45 @@
+# A guide to help you install tomcat
+
+Tomcat Installation Guide.
+sudo apt update
+sudo apt install default-jdk -y
+Install tomcat : 
+wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.40/bin/apache-tomcat-10.1.40.tar.gz
+
+sudo mkdir -p /opt/tomcat
+sudo groupadd tomcat
+sudo useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+sudo tar xzvf apache-tomcat-10.1.40.tar.gz -C /opt/tomcat --strip-component=1
+sudo chown -RH tomcat: /opt/tomcat
+sudo sh -c 'chmod +x /opt/tomcat/bin/*.sh'
+sudo nano /etc/systemd/system/tomcat.service
+Copy the following code to tomcat 
+
+
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+[Service]
+Type=forking
+User=tomcat
+Group=tomcat
+Environment="JAVA_HOME=/usr/lib/jvm/java-1.21.0-openjdk-amd64"
+Environment="CATALINA_BASE=/opt/tomcat"
+Environment="CATALINA_HOME=/opt/tomcat"
+Environment="CATALINA_PID=/opt/tomcat/temp/tomcat.pid"
+Environment="JAVA_OPTS=-Djava.security.egd=file:///dev/urandom -Djava.awt.headless=true"
+Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+[Install]
+WantedBy=multi-user.target
+
+
+Reload the daemon : 
+sudo systemctl daemon-reload
+
+sudo systemctl start tomcat
+sudo systemctl enable tomcat
+sudo systemctl status tomcat
+Adjust the firewall 
+sudo ufw allow 8080/tcp
