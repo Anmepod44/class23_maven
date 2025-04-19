@@ -23,7 +23,7 @@ After=network.target
 Type=forking
 User=tomcat
 Group=tomcat
-Environment="JAVA_HOME=/usr/lib/jvm/java-1.21.0-openjdk-amd64"
+Environment="JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64"
 Environment="CATALINA_BASE=/opt/tomcat"
 Environment="CATALINA_HOME=/opt/tomcat"
 Environment="CATALINA_PID=/opt/tomcat/temp/tomcat.pid"
@@ -37,9 +37,14 @@ WantedBy=multi-user.target
 
 Reload the daemon : 
 sudo systemctl daemon-reload
-
 sudo systemctl start tomcat
 sudo systemctl enable tomcat
 sudo systemctl status tomcat
+
 Adjust the firewall 
 sudo ufw allow 8080/tcp
+
+# Commands to set up the Tomcat Manager
+
+sudo nano /opt/tomcat/conf/tomcat-users.xml
+
